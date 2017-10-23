@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd" 
+	xmlns:tx="http://www.springframework.org/schema/tx">
+
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="url"
+			value="jdbc:sqlserver://115.29.174.77:1433;DatabaseName=P2P_CREDIT_TEST">
+		</property>
+		<property name="username" value="sa"></property>
+		<property name="password" value="byd!mH16"></property>
+		<property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"></property>
+		<!-- 最大连接数 -->
+		<property name="maxActive" value="20"></property>
+		<!-- 最少连接数,初始连接数,最大空闲时间-->
+		<property name="minIdle" value="1"></property>
+		<property name="initialSize" value="1"></property>
+		<property name="minEvictableIdleTimeMillis" value="20"></property>
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="mappingResources">
+		<!-- 列出Hibernate映射文件 -->
+			<list>
+				<value>./hbx/SDRole.hbm.xml</value>
+				<value>./hbx/CustInfo.hbm.xml</value>
+				<value>./hbx/ReqBaseData.hbm.xml</value>
+				<value>./hbx/ReqImageData.hbm.xml</value>
+				<value>./hbx/ReqLoanOther.hbm.xml</value>
+				<value>./hbx/FirstInstanceRecord.hbm.xml</value>
+				<value>./hbx/FirstInstanceChangeHistory.hbm.xml</value>
+				<value>./hbx/LastInstanceRecord.hbm.xml</value>
+				<value>./hbx/LastInstanceChangeHistory.hbm.xml</value>
+				<value>./hbx/NationWideStores.hbm.xml</value>
+				<value>./hbx/StoreBusinessData.hbm.xml</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.SQLServerDialect</prop>
+				<!-- 支持动态更新表结构映射 -->
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.myeclipse.connection.profile">P2P_CREDIT_TEST</prop>
+				<!-- sql按格式输出 -->
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.use_sql_comments">true</prop>
+				
+				<!-- 关闭 bean validate 验证模式-->
+				<prop key="hibernate.javax.persistence.validation.model">none</prop>
+				<!-- 避免getCurrentSession时找不到session,但是查询也需要开启事务了 -->
+				<!--prop key="hibernate.current_session_context_class">thread</prop-->
+			</props>
+		</property>
+	</bean>
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<!--tx:annotation-driven transaction-manager="txManager"/-->
+	
+	<tx:advice id="txAdvice" transaction-manager="txManager"> 
+	<tx:attributes> 
+	<tx:method name="save*" propagation="REQUIRED"/> 
+	<tx:method name="add*" propagation="REQUIRED"/> 
+	<tx:method name="create*" propagation="REQUIRED"/> 
+	<tx:method name="insert*" propagation="REQUIRED"/> 
+	<tx:method name="update*" propagation="REQUIRED"/> 
+	<tx:method name="delete*" propagation="REQUIRED"/>
+	<tx:method name="batch*" read-only="true" propagation="REQUIRED" />
+	<tx:method name="*" read-only="true" /> 
+	</tx:attributes> 
+	</tx:advice> 
+
+	<!-- aop编程,在调用操作那里增加事务控制 -->
+	<aop:config>    
+        <aop:pointcut id="daoMethods" expression="execution(* com.platenco.p2pCredit.service.impl..*Impl.*(..))" />  
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="daoMethods" />
+    </aop:config>
+	
+	
+	
+	<!-- 业务bean -->
+	<bean id="roleDao" class="com.platenco.p2pCredit.service.impl.SDRoleServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="custInfoDao" class="com.platenco.p2pCredit.service.impl.CustInfoServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="reqBaseDataDao" class="com.platenco.p2pCredit.service.impl.ReqBaseDataServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="reqImageDataDao" class="com.platenco.p2pCredit.service.impl.ReqImageDataServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+		<property name="reqBaseDataDao">
+			<ref bean="reqBaseDataDao" />
+		</property>
+	</bean>
+	<bean id="reqLoanOtherDao" class="com.platenco.p2pCredit.service.impl.ReqLoanOtherServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="firstInstanceChangeHistoryDao" class="com.platenco.p2pCredit.service.impl.FirstInstanceChangeHistoryServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="firstInstanceRecordDao" class="com.platenco.p2pCredit.service.impl.FirstInstanceRecordServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="lastInstanceChangeHistoryDao" class="com.platenco.p2pCredit.service.impl.LastInstanceChangeHistoryServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="lastInstanceRecordDao" class="com.platenco.p2pCredit.service.impl.LastInstanceRecordServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="nationWideStoresDao" class="com.platenco.p2pCredit.service.impl.NationWideStoresServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<bean id="storeBusinessDataDao" class="com.platenco.p2pCredit.service.impl.StoreBusinessDataServiceImpl">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+</beans>

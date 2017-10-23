@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-reverse-engineering PUBLIC "-//Hibernate/Hibernate Reverse Engineering DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd" >
+
+<hibernate-reverse-engineering>
+
+	<table name="SD_ROLE" schema="dbo" catalog="P2P_CREDIT_TEST"
+		class="SDRole">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_CUST_INFO" schema="dbo" catalog="P2P_CREDIT_TEST"
+		class="CustInfo">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_REQ_BASE_DATA" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="ReqBaseData">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_REQ_IMAGE_DATA" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="ReqImageData">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_REQ_LOAN_OTHER" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="ReqLoanOther">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_FIRST_INSTANCE_RECORD" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="FirstInstanceRecord">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_FIRST_INSTANCE_CHANGE_HISTORY" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="FirstInstanceChangeHistory">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_LAST_INSTANCE_RECORD" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="LastInstanceRecord">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="LN_LAST_INSTANCE_CHANGE_HISTORY" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="LastInstanceChangeHistory">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+	<table name="BI_NATIONWIDE_STORES" schema="dbo"
+		catalog="P2P_CREDIT_TEST" class="NationWideStores">
+		<primary-key>
+			<generator class="native"></generator>
+		</primary-key>
+	</table>
+<table name="BI_STORE_BUSINESS_DATA" schema="dbo"
+	catalog="P2P_CREDIT_TEST" class="StoreBusinessData">
+	<primary-key>
+		<generator class="native"></generator>
+	</primary-key>
+</table>
+</hibernate-reverse-engineering>

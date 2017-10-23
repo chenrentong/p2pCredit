@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="WARN" monitorInterval="300" debug="true">  
+   <property name="LOG_HOME" value="${p2pCredit.root}/WEB-INF/logs" />   
+   <!-- ch.qos.logback.core.ConsoleAppender 控制台输出 -->  
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">  
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">  
+            <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n  
+            </pattern>  
+        </encoder>  
+    </appender>  
+  
+    <!-- ch.qos.logback.core.rolling.RollingFileAppender 文件日志输出 -->  
+    <appender name="file"  
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/credit.log</File>  
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+            <FileNamePattern>${LOG_HOME}/credit-%d{yyyy-MM-dd}.log  
+            </FileNamePattern>  
+            <MaxHistory>10</MaxHistory>  
+            <TimeBasedFileNamingAndTriggeringPolicy  
+                class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">  
+                <MaxFileSize>5MB</MaxFileSize>  
+            </TimeBasedFileNamingAndTriggeringPolicy>  
+        </rollingPolicy>  
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"> 
+            <pattern>[%-5level] %d{HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n  
+            </pattern>  
+        </encoder>  
+    </appender>  
+    
+    <!-- 下面配置一些第三方包的日志过滤级别，用于避免刷屏 -->  
+  
+    <!--logger name="org.hibernate" level="WARN" />  
+    <logger name="org.springframework" level="WARN" />  
+    <logger name="com.opensymphony" level="WARN" />  
+    <logger name="org.apache" level="WARN" /-->  
+  
+    <!-- show parameters for hibernate sql 专为 Hibernate 定制 -->  
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor"  level="DEBUG"/>
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.hibernate.engine.QueryParameters" level="DEBUG"/>
+    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="DEBUG"/>
+  
+    <!-- 日志级别 -->  
+    <root>  
+        <!-- 定义了ERROR和INFO级别的日志，分别在FILE文件和控制台输出 -->  
+        <level value="ERROR" />  
+        <level value="WARN" /> 
+        <level value="INFO" />
+        <level value="DEBUG"/>  
+        <level value="TRACE"/>
+        <appender-ref ref="file" />   
+        <appender-ref ref="console" />  
+    </root> 
+    
+    
+</Configuration> 
